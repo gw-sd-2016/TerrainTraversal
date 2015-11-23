@@ -1,15 +1,15 @@
 close all;
 
-he = imread('segment.png');
+image = imread('segment.png');
 cform = makecform('srgb2lab');
-lab_he = applycform(he,cform);
-ab = double(lab_he(:,:,2:3));
+lab_image = applycform(image,cform);
+ab = double(lab_image(:,:,2:3));
 nrows = size(ab,1);
 ncols = size(ab,2);
 ab = reshape(ab,nrows*ncols,2);
 
 nColors = 3;
-% repeat the clustering 3 times to avoid local minima
+% repeat timage clustering 3 times to avoid local minima
 [cluster_idx, cluster_center] = kmeans(ab,nColors,'distance','sqEuclidean', ...
                                       'Replicates',3);
 pixel_labels = reshape(cluster_idx,nrows,ncols);
@@ -18,7 +18,7 @@ segmented_images = cell(1,6);
 rgb_label = repmat(pixel_labels,[1 1 3]);
 
 for k = 1:nColors
-    color = he;
+    color = image;
     color(rgb_label ~= k) = 0;
     segmented_images{k} = color;
 end
